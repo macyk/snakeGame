@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Snake : MonoBehaviour
@@ -16,6 +16,12 @@ public class Snake : MonoBehaviour
     int     _id;
     List<Vector2>   _directions = new List<Vector2>();
     Vector2         _currentDirection;
+    /// <summary>
+    /// snake head pos
+    /// </summary>
+    Vector2         _headPos;
+    List<GridCell>  _cells      = new List<GridCell>();
+    GameGrid        _gameGrid;
 
     public void Setup(KeyCode upKey, KeyCode leftKey, KeyCode rightKey,
         KeyCode downKey, Color color, int id)
@@ -34,12 +40,35 @@ public class Snake : MonoBehaviour
         _directions.Add(new Vector2(0, -1));
         //left
         _directions.Add(new Vector2(-1, 0));
-
-        _currentDirection = _directions[Random.Range(0, _directions.Count)];
     }
 
     public void StartMoving(GameGrid gameGrid)
     {
-        gameGrid.PlaceASnake(_id, _color);
+        _gameGrid = gameGrid;
+        GridCell cell= gameGrid.PlaceASnake(_id, _color);
+        _headPos = cell.GetPos();
+        _currentDirection = cell.GetRandomDirection();
+        _cells.Add(cell);
+    }
+
+    public void MoveNext()
+    {
+        Debug.Log("MoveNext");
+        if(_gameGrid == null)
+        {
+            Debug.LogError("no grid");
+        }
+        GridCell cell = _gameGrid.GetACell(_headPos + _currentDirection);
+        if(cell == null)
+        {
+            Debug.Log("==== game over");
+        }
+        else if(cell.FillCell(_id, Color.red))
+        {
+            GridCell tail = _cells.First();
+            tail.UnFill();
+            _gameGrid.ReleaseACell(tail);
+            _cells.Add(cell);
+        }
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,16 +6,16 @@ using UnityEngine.UI;
 public class GameGrid : MonoBehaviour
 {
     public GridLayoutGroup  grid;
-    public Image            spacePrefab;
+    public GridCell         spacePrefab;
     /// <summary>
     /// num of rows
     /// </summary>
     public int row;
     public int column;
-    List<Image> _grids = new List<Image>();
-    Dictionary<Vector2, Image> _emptyGrids = new Dictionary<Vector2, Image>();
+    List<GridCell> _grids = new List<GridCell>();
+    Dictionary<Vector2, GridCell> _emptyGrids = new Dictionary<Vector2, GridCell>();
 
-    public List<Image> GenerateGrids()
+    public List<GridCell> GenerateGrids()
     {
         int x = 0;
         int y = 0;
@@ -24,9 +23,10 @@ public class GameGrid : MonoBehaviour
         {
             for (int i = 0; i < row*column; i++)
             {
-                Image space = Instantiate(spacePrefab);
+                GridCell space = Instantiate(spacePrefab);
                 space.name = x + ", " + y;
                 space.transform.SetParent(grid.transform);
+                space.SetUpWithPos(x, y, row, column);
                 _grids.Add(space);
                 _emptyGrids.Add(new Vector2(x, y), space);
                 x++;
@@ -43,11 +43,44 @@ public class GameGrid : MonoBehaviour
         return _grids;
     }
 
-    public void PlaceASnake(int id, Color color)
+    public GridCell PlaceASnake(int id, Color color)
     {
         int randomIndex = Random.Range(0, _emptyGrids.Count);
         Vector2 startPos = _emptyGrids.Keys.ElementAt(randomIndex);
-        Image startingPoint = _emptyGrids[startPos];
-        startingPoint.color = color;
+        GridCell startingPoint = _emptyGrids[startPos];
+        startingPoint.FillCell(id, color);
+        _emptyGrids.Remove(startPos);
+        return startingPoint;
+    }
+
+    /// <summary>
+    /// get next cell based on it's pos
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public GridCell GetACell(Vector2 id)
+    {
+        if(_emptyGrids.ContainsKey(id))
+        {
+            Debug.Log("next: " + id);
+            GridCell cell = _emptyGrids[id];
+            _emptyGrids.Remove(id);
+
+            return cell;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// when moved away
+    /// </summary>
+    public void ReleaseACell(GridCell cell)
+    {
+        Vector2 pos = cell.GetPos();
+        if (!_emptyGrids.ContainsKey(pos))
+        {
+            _emptyGrids.Add(pos, cell);
+        }
     }
 }

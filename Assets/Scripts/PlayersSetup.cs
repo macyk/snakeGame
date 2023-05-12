@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class PlayersSetup : MonoBehaviour
     public GameGrid gameGrid;
     List<Snake>     _allPlayers = new List<Snake>();
     bool            _started;
+    TimeManager     _timeManager;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +41,7 @@ public class PlayersSetup : MonoBehaviour
     {
         if(!_started && Input.GetKeyDown(KeyCode.Space))
         {
+            _started = true;
             StartGame();
         }
     }
@@ -52,6 +55,27 @@ public class PlayersSetup : MonoBehaviour
         for (int i = 0; i < _allPlayers.Count; i++)
         {
             _allPlayers[i].StartMoving(gameGrid);
+        }
+        if(_timeManager == null)
+        {
+            _timeManager = gameObject.AddComponent<TimeManager>();
+        }
+        TimeManager.OnTimesUp.AddListener(MoveSnakes);
+    }
+
+    void MoveSnakes()
+    {
+        for (int i = 0; i < _allPlayers.Count; i++)
+        {
+            _allPlayers[i].MoveNext();
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (_timeManager != null)
+        {
+            TimeManager.OnTimesUp.RemoveAllListeners();
         }
     }
 }
