@@ -23,7 +23,6 @@ public class PlayersSetup : MonoBehaviour
         if(gameGrid != null)
         {
             gameGrid.GenerateGrids();
-            gameGrid.CreateAnApple();
         }
     }
 
@@ -62,6 +61,8 @@ public class PlayersSetup : MonoBehaviour
             _timeManager = gameObject.AddComponent<TimeManager>();
         }
         TimeManager.OnTimesUp.AddListener(MoveSnakes);
+
+        gameGrid.CreateAnApple();
     }
 
     void MoveSnakes()
