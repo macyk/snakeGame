@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class PlayersSetup : MonoBehaviour
 {
-    public int      numOfPlayers = 1;
+    public PlayerScriptableObject[]         playerInfos;
     public Snake    snakePrefab;
     public GameGrid gameGrid;
-    List<Snake>     _allPlayers = new List<Snake>();
+    List<Snake>     _allPlayers             = new List<Snake>();
     bool            _started;
     TimeManager     _timeManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i< numOfPlayers; i++)
+        for(int i = 0; i< playerInfos.Length; i++)
         {
-            CreateASnake(KeyCode.W, KeyCode.A, KeyCode.D,
-                KeyCode.S,
-                Color.red, i);
+            CreateASnake(playerInfos[i].upKey, playerInfos[i].leftKey, playerInfos[i].rightKey,
+                playerInfos[i].downKey,
+                playerInfos[i].playerColor, i);
         }
         if(gameGrid != null)
         {

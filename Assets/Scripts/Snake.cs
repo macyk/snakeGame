@@ -108,7 +108,7 @@ public class Snake : MonoBehaviour
         }
         else
         {
-            int extraLength = cell.FillCell(_id, Color.red);
+            int extraLength = cell.FillCell(_id, _color);
             if(extraLength >-1)
             {
                 //if we ate an apple, we keep the previous tail
