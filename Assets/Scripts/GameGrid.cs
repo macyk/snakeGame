@@ -62,7 +62,6 @@ public class GameGrid : MonoBehaviour
     {
         if(_emptyGrids.ContainsKey(id))
         {
-            Debug.Log("next: " + id);
             GridCell cell = _emptyGrids[id];
             _emptyGrids.Remove(id);
 

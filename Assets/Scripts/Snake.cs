@@ -32,14 +32,34 @@ public class Snake : MonoBehaviour
         _downKey = downKey;
         _color = color;
         _id = id;
-        //up
+        //down
         _directions.Add(new Vector2(0, 1));
         //right
         _directions.Add(new Vector2(1, 0));
-        //down
+        //up
         _directions.Add(new Vector2(0, -1));
         //left
         _directions.Add(new Vector2(-1, 0));
+    }
+
+    void Update()
+    {
+        if(Input.GetKeyDown(_downKey))
+        {
+            _currentDirection = new Vector2(0, 1);
+        }
+        if(Input.GetKeyDown(_leftKey))
+        {
+            _currentDirection = new Vector2(-1, 0);
+        }
+        if (Input.GetKeyDown(_upKey))
+        {
+            _currentDirection = new Vector2(0, -1);
+        }
+        if (Input.GetKeyDown(_rightKey))
+        {
+            _currentDirection = new Vector2(1, 0);
+        }
     }
 
     public void StartMoving(GameGrid gameGrid)
