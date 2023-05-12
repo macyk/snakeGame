@@ -69,6 +69,7 @@ public class Snake : MonoBehaviour
             tail.UnFill();
             _gameGrid.ReleaseACell(tail);
             _cells.Add(cell);
+            _headPos = cell.GetPos();
         }
     }
 }
