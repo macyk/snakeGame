@@ -74,19 +74,19 @@ public class GridCell : MonoBehaviour
         _y = y;
         if(x< column-1)
         {
-            _directions.Add(new Vector2(1, 0));
+            _directions.Add(GameInfo.RIGHT);
         }
         if(x > 0)
         {
-            _directions.Add(new Vector2(-1, 0));
+            _directions.Add(GameInfo.LEFT);
         }
         if(y< row-1)
         {
-            _directions.Add(new Vector2(0, -1));
+            _directions.Add(GameInfo.DOWN);
         }
         if (y > 0)
         {
-            _directions.Add(new Vector2(0, 1));
+            _directions.Add(GameInfo.UP);
         }
     }
 

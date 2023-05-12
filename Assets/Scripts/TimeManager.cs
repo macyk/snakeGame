@@ -12,7 +12,7 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// how many seconds do we wait
     /// </summary>
-    float _duration = 1;
+    float _duration = 0.5f;
     float _timeStamp;
 
     // Start is called before the first frame update

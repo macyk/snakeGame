@@ -18,10 +18,6 @@ public class Snake : MonoBehaviour
     Vector2         _headPos;
     List<GridCell>  _cells      = new List<GridCell>();
     GameGrid        _gameGrid;
-    Vector2         _downDir    = new Vector2(0, 1);
-    Vector2         _rightDir   = new Vector2(1, 0);
-    Vector2         _leftDir    = new Vector2(-1, 0);
-    Vector2         _upDir      = new Vector2(0, -1);
 
     public void Setup(KeyCode upKey, KeyCode leftKey, KeyCode rightKey,
         KeyCode downKey, Color color, int id)
@@ -33,13 +29,13 @@ public class Snake : MonoBehaviour
         _color = color;
         _id = id;
         //down
-        _directions.Add(_downDir);
+        _directions.Add(GameInfo.DOWN);
         //right
-        _directions.Add(_rightDir);
+        _directions.Add(GameInfo.RIGHT);
         //up
-        _directions.Add(_upDir);
+        _directions.Add(GameInfo.UP);
         //left
-        _directions.Add(_leftDir);
+        _directions.Add(GameInfo.LEFT);
     }
 
     void Update()
@@ -48,43 +44,43 @@ public class Snake : MonoBehaviour
         {
             ///we cannot go backwards
             if (Input.GetKeyDown(_downKey)
-                && !Equals(_currentDirection, _upDir))
+                && !Equals(_currentDirection, GameInfo.UP))
             {
-                _currentDirection = _downDir;
+                _currentDirection = GameInfo.DOWN;
             }
             if (Input.GetKeyDown(_leftKey)
-                && !Equals(_currentDirection, _rightDir))
+                && !Equals(_currentDirection, GameInfo.RIGHT))
             {
-                _currentDirection = _leftDir;
+                _currentDirection = GameInfo.LEFT;
             }
             if (Input.GetKeyDown(_upKey)
-                && !Equals(_currentDirection, _downDir))
+                && !Equals(_currentDirection, GameInfo.DOWN))
             {
-                _currentDirection = _upDir;
+                _currentDirection = GameInfo.UP;
             }
             if (Input.GetKeyDown(_rightKey)
-                && !Equals(_currentDirection, _leftDir))
+                && !Equals(_currentDirection, GameInfo.LEFT))
             {
-                _currentDirection = _rightDir;
+                _currentDirection = GameInfo.RIGHT;
             }
         }
         else if(_cells.Count == 1)
         {
             if (Input.GetKeyDown(_downKey))
             {
-                _currentDirection = _downDir;
+                _currentDirection = GameInfo.DOWN;
             }
             if (Input.GetKeyDown(_leftKey))
             {
-                _currentDirection = _leftDir;
+                _currentDirection = GameInfo.LEFT;
             }
             if (Input.GetKeyDown(_upKey))
             {
-                _currentDirection = _upDir;
+                _currentDirection = GameInfo.UP;
             }
             if (Input.GetKeyDown(_rightKey))
             {
-                _currentDirection = _rightDir;
+                _currentDirection = GameInfo.RIGHT;
             }
         }
     }

@@ -51,7 +51,7 @@ public class GameGrid : MonoBehaviour
     /// <returns></returns>
     public GridCell PlaceASnake(int id, Color color)
     {
-        GridCell startingPoint = GetARandomCell();
+        GridCell startingPoint = _emptyGrids[new Vector2(5,0)];
         startingPoint.FillCell(id, color);
         _emptyGrids.Remove(startingPoint.GetPos());
         return startingPoint;
