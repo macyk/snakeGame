@@ -6,27 +6,39 @@ using UnityEngine.UI;
 public class GameGrid : MonoBehaviour
 {
     public GridLayoutGroup  grid;
-    public GameObject       spacePrefab;
+    public Image            spacePrefab;
     /// <summary>
     /// num of rows
     /// </summary>
     public int row;
     public int column;
+    List<Image> _grids = new List<Image>();
+    Dictionary<Vector2, Image> _emptyGrids = new Dictionary<Vector2, Image>();
 
-    // Start is called before the first frame update
-    void Start()
+    public List<Image> GenerateGrids()
     {
+        int x = 0;
+        int y = 0;
         if(spacePrefab != null && grid != null)
         {
             for (int i = 0; i < row*column; i++)
             {
-                GameObject space = Instantiate(spacePrefab);
+                Image space = Instantiate(spacePrefab);
+                space.name = x + ", " + y;
                 space.transform.SetParent(grid.transform);
+                _grids.Add(space);
+                _emptyGrids.Add(new Vector2(x, y), space);
+                x++;
+                if(x>= column)
+                {
+                    y++;
+                    x = 0;
+                }
             }
 
             grid.constraintCount = row;
             grid.spacing = new Vector2(1, 1);
         }
-        
+        return _grids;
     }
 }
