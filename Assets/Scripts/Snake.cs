@@ -53,7 +53,6 @@ public class Snake : MonoBehaviour
 
     public void MoveNext()
     {
-        Debug.Log("MoveNext");
         if(_gameGrid == null)
         {
             Debug.LogError("no grid");
@@ -67,7 +66,9 @@ public class Snake : MonoBehaviour
         {
             GridCell tail = _cells.First();
             tail.UnFill();
+
             _gameGrid.ReleaseACell(tail);
+            _cells.Remove(tail);
             _cells.Add(cell);
             _headPos = cell.GetPos();
         }
