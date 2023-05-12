@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,5 +41,13 @@ public class GameGrid : MonoBehaviour
             grid.spacing = new Vector2(1, 1);
         }
         return _grids;
+    }
+
+    public void PlaceASnake(int id, Color color)
+    {
+        int randomIndex = Random.Range(0, _emptyGrids.Count);
+        Vector2 startPos = _emptyGrids.Keys.ElementAt(randomIndex);
+        Image startingPoint = _emptyGrids[startPos];
+        startingPoint.color = color;
     }
 }

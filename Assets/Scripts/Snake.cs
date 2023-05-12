@@ -13,17 +13,19 @@ public class Snake : MonoBehaviour
     /// the length of the snake starts with 1
     /// </summary>
     int     _length = 1;
+    int     _id;
     List<Vector2>   _directions = new List<Vector2>();
     Vector2         _currentDirection;
 
     public void Setup(KeyCode upKey, KeyCode leftKey, KeyCode rightKey,
-        KeyCode downKey, Color color)
+        KeyCode downKey, Color color, int id)
     {
         _upKey = upKey;
         _leftKey = leftKey;
         _rightKey = rightKey;
         _downKey = downKey;
         _color = color;
+        _id = id;
         //up
         _directions.Add(new Vector2(0, 1));
         //right
@@ -36,8 +38,8 @@ public class Snake : MonoBehaviour
         _currentDirection = _directions[Random.Range(0, _directions.Count)];
     }
 
-    public void StartMoving()
+    public void StartMoving(GameGrid gameGrid)
     {
-
+        gameGrid.PlaceASnake(_id, _color);
     }
 }

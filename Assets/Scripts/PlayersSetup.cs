@@ -16,7 +16,7 @@ public class PlayersSetup : MonoBehaviour
         {
             CreateASnake(KeyCode.W, KeyCode.A, KeyCode.D,
                 KeyCode.S,
-                Color.red);
+                Color.red, i);
         }
         if(gameGrid != null)
         {
@@ -25,12 +25,12 @@ public class PlayersSetup : MonoBehaviour
     }
 
     void CreateASnake(KeyCode upKey, KeyCode leftKey, KeyCode rightKey,
-        KeyCode downKey, Color color)
+        KeyCode downKey, Color color, int id)
     {
         if(snakePrefab != null)
         {
             Snake s = Instantiate(snakePrefab);
-            s.Setup(upKey, leftKey, rightKey, downKey, color);
+            s.Setup(upKey, leftKey, rightKey, downKey, color, id);
             _allPlayers.Add(s);
         }
     }
@@ -45,9 +45,13 @@ public class PlayersSetup : MonoBehaviour
 
     void StartGame()
     {
+        if(gameGrid == null)
+        {
+            Debug.LogError("no game grid");
+        }
         for (int i = 0; i < _allPlayers.Count; i++)
         {
-            _allPlayers[i].StartMoving();
+            _allPlayers[i].StartMoving(gameGrid);
         }
     }
 }
