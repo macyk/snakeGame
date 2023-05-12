@@ -43,14 +43,33 @@ public class GameGrid : MonoBehaviour
         return _grids;
     }
 
+    /// <summary>
+    /// add a snake
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="color"></param>
+    /// <returns></returns>
     public GridCell PlaceASnake(int id, Color color)
+    {
+        GridCell startingPoint = GetARandomCell();
+        startingPoint.FillCell(id, color);
+        _emptyGrids.Remove(startingPoint.GetPos());
+        return startingPoint;
+    }
+
+    GridCell GetARandomCell()
     {
         int randomIndex = Random.Range(0, _emptyGrids.Count);
         Vector2 startPos = _emptyGrids.Keys.ElementAt(randomIndex);
-        GridCell startingPoint = _emptyGrids[startPos];
-        startingPoint.FillCell(id, color);
-        _emptyGrids.Remove(startPos);
-        return startingPoint;
+        GridCell cell = _emptyGrids[startPos];
+
+        return cell;
+    }
+
+    public void CreateAnApple()
+    {
+        GridCell cell = GetARandomCell();
+        cell.ShowApple();
     }
 
     /// <summary>

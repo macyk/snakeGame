@@ -82,15 +82,28 @@ public class Snake : MonoBehaviour
         {
             Debug.Log("==== game over");
         }
-        else if(cell.FillCell(_id, Color.red))
+        else
         {
-            GridCell tail = _cells.First();
-            tail.UnFill();
+            int extraLength = cell.FillCell(_id, Color.red);
+            if(extraLength >-1)
+            {
+                //if we ate an apple, we keep the previous tail
+                if(extraLength<1)
+                {
+                    GridCell tail = _cells.First();
+                    tail.UnFill();
 
-            _gameGrid.ReleaseACell(tail);
-            _cells.Remove(tail);
-            _cells.Add(cell);
-            _headPos = cell.GetPos();
+                    _gameGrid.ReleaseACell(tail);
+                    _cells.Remove(tail);
+                }
+                else ///after we eat an apple, we create a new one
+                {
+                    _gameGrid.CreateAnApple();
+                }
+                
+                _cells.Add(cell);
+                _headPos = cell.GetPos();
+            }
         }
     }
 }

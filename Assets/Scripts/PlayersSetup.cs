@@ -23,6 +23,7 @@ public class PlayersSetup : MonoBehaviour
         if(gameGrid != null)
         {
             gameGrid.GenerateGrids();
+            gameGrid.CreateAnApple();
         }
     }
 

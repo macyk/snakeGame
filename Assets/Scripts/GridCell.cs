@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class GridCell : MonoBehaviour
 {
     public Image    cellImage;
+    public Image    appleImage;
     /// <summary>
     /// -1 when no snake on it
     /// </summary>
@@ -12,8 +13,33 @@ public class GridCell : MonoBehaviour
     float           _x;
     float           _y;
     List<Vector2>   _directions = new List<Vector2>();
+    bool            _isApple;
 
-    public bool FillCell(int playerID, Color color)
+    public void ShowApple()
+    {
+        if(appleImage != null)
+        {
+            appleImage.gameObject.SetActive(true);
+        }
+        _isApple = true;
+    }
+
+    void AteApple()
+    {
+        if (appleImage != null)
+        {
+            appleImage.gameObject.SetActive(false);
+        }
+        _isApple = false;
+    }
+
+    /// <summary>
+    /// Fill the cell and check
+    /// </summary>
+    /// <param name="playerID"></param>
+    /// <param name="color"></param>
+    /// <returns>extra length, -1 means cell is already taken, 1 means it has an apple</returns>
+    public int FillCell(int playerID, Color color)
     {
         if(_playerID == -1)
         {
@@ -23,9 +49,14 @@ public class GridCell : MonoBehaviour
                 cellImage.color = color;
             }
 
-            return true;
+            if (_isApple)
+            {
+                AteApple();
+                return 1;
+            }
+            return 0;
         }
-        return false;
+        return -1;
     }
 
     public void UnFill()
