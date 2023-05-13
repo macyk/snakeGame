@@ -49,6 +49,11 @@ public class Snake : MonoBehaviour
         _directions.Add(GameInfo.LEFT);
     }
 
+    public int GetID()
+    {
+        return _id;
+    }
+
     void Update()
     {
         if(!_alive)
@@ -129,7 +134,7 @@ public class Snake : MonoBehaviour
         {
             if(GameManager.Instance)
             {
-                GameManager.Instance.GameOver();
+                GameManager.Instance.GameOver(this);
             }
             return false;
         }
