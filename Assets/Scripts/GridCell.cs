@@ -99,4 +99,14 @@ public class GridCell : MonoBehaviour
     {
         return _directions[Random.Range(0, _directions.Count)];
     }
+
+    /// <summary>
+    /// reset to defalut state
+    /// </summary>
+    public void Reset()
+    {
+        UnFill();
+        AteApple();
+        _playerID = -1;
+    }
 }

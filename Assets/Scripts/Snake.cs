@@ -18,10 +18,21 @@ public class Snake : MonoBehaviour
     Vector2         _headPos;
     List<GridCell>  _cells      = new List<GridCell>();
     GameGrid        _gameGrid;
+    bool            _alive;
 
+    /// <summary>
+    /// set up the snake with it's control, id and color
+    /// </summary>
+    /// <param name="upKey"></param>
+    /// <param name="leftKey"></param>
+    /// <param name="rightKey"></param>
+    /// <param name="downKey"></param>
+    /// <param name="color"></param>
+    /// <param name="id"></param>
     public void Setup(KeyCode upKey, KeyCode leftKey, KeyCode rightKey,
         KeyCode downKey, Color color, int id)
     {
+        _alive = true;
         _upKey = upKey;
         _leftKey = leftKey;
         _rightKey = rightKey;
@@ -40,6 +51,10 @@ public class Snake : MonoBehaviour
 
     void Update()
     {
+        if(!_alive)
+        {
+            return;
+        }
         if(_cells.Count>1)
         {
             ///we cannot go backwards
@@ -95,16 +110,28 @@ public class Snake : MonoBehaviour
         _cells.Add(cell);
     }
 
-    public void MoveNext()
+    /// <summary>
+    /// moves the snake
+    /// </summary>
+    /// <returns>true if we moved sucessfuly</returns>
+    public bool MoveNext()
     {
-        if(_gameGrid == null)
+        if (!_alive)
+        {
+            return false;
+        }
+        if (_gameGrid == null)
         {
             Debug.LogError("no grid");
         }
         GridCell cell = _gameGrid.GetACell(_headPos + _currentDirection);
         if(cell == null)
         {
-            Debug.Log("==== game over");
+            if(GameManager.Instance)
+            {
+                GameManager.Instance.GameOver();
+            }
+            return false;
         }
         else
         {
@@ -129,5 +156,7 @@ public class Snake : MonoBehaviour
                 _headPos = cell.GetPos();
             }
         }
+
+        return true;
     }
 }

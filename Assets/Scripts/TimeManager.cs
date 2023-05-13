@@ -12,8 +12,9 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// how many seconds do we wait
     /// </summary>
-    float _duration = 0.5f;
-    float _timeStamp;
+    float   _duration = 0.5f;
+    float   _timeStamp;
+    bool    _paused;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +25,10 @@ public class TimeManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(_paused)
+        {
+            return;
+        }
         float now = Time.realtimeSinceStartup;
         if(now - _timeStamp > _duration)
         {
@@ -33,5 +38,20 @@ public class TimeManager : MonoBehaviour
                 OnTimesUp.Invoke();
             }
         }
+    }
+
+    /// <summary>
+    /// pause the timer
+    /// </summary>
+    /// <param name="pause"></param>
+    public void Pause(bool pause)
+    {
+        _paused = pause;
+    }
+
+    public void Restart()
+    {
+        _timeStamp = Time.realtimeSinceStartup;
+        Pause(false);
     }
 }

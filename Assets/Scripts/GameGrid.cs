@@ -15,30 +15,45 @@ public class GameGrid : MonoBehaviour
     List<GridCell> _grids = new List<GridCell>();
     Dictionary<Vector2, GridCell> _emptyGrids = new Dictionary<Vector2, GridCell>();
 
+    /// <summary>
+    /// generate the grids
+    /// </summary>
+    /// <returns></returns>
     public List<GridCell> GenerateGrids()
     {
         int x = 0;
         int y = 0;
-        if(spacePrefab != null && grid != null)
+        if (_grids.Count == 0)
         {
-            for (int i = 0; i < row*column; i++)
+            if (spacePrefab != null && grid != null)
             {
-                GridCell space = Instantiate(spacePrefab);
-                space.name = x + ", " + y;
-                space.transform.SetParent(grid.transform);
-                space.SetUpWithPos(x, y, row, column);
-                _grids.Add(space);
-                _emptyGrids.Add(new Vector2(x, y), space);
-                x++;
-                if(x>= column)
+            
+                for (int i = 0; i < row * column; i++)
                 {
-                    y++;
-                    x = 0;
+                    GridCell space = Instantiate(spacePrefab);
+                    space.name = x + ", " + y;
+                    space.transform.SetParent(grid.transform);
+                    space.SetUpWithPos(x, y, row, column);
+                    _grids.Add(space);
+                    _emptyGrids.Add(new Vector2(x, y), space);
+                    x++;
+                    if (x >= column)
+                    {
+                        y++;
+                        x = 0;
+                    }
                 }
             }
 
             grid.constraintCount = row;
             grid.spacing = new Vector2(1, 1);
+        }
+        else
+        {
+            for (int i = 0; i < row * column; i++)
+            {
+                _grids[i].Reset();
+            }
         }
         return _grids;
     }

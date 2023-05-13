@@ -1,14 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayersSetup : MonoBehaviour
+public class PlayerManager : MonoBehaviour
 {
     public PlayerScriptableObject[]         playerInfos;
     public Snake    snakePrefab;
-    public GameGrid gameGrid;
     List<Snake>     _allPlayers             = new List<Snake>();
-    bool            _started;
     TimeManager     _timeManager;
 
     // Start is called before the first frame update
@@ -19,10 +16,6 @@ public class PlayersSetup : MonoBehaviour
             CreateASnake(playerInfos[i].upKey, playerInfos[i].leftKey, playerInfos[i].rightKey,
                 playerInfos[i].downKey,
                 playerInfos[i].playerColor, i);
-        }
-        if(gameGrid != null)
-        {
-            gameGrid.GenerateGrids();
         }
     }
 
@@ -37,47 +30,43 @@ public class PlayersSetup : MonoBehaviour
         }
     }
 
-    void Update()
+    public void StartPlayers(GameGrid gameGrid)
     {
-        if(!_started && Input.GetKeyDown(KeyCode.Space))
-        {
-            _started = true;
-            StartGame();
-        }
-    }
-
-    void StartGame()
-    {
-        if(gameGrid == null)
-        {
-            Debug.LogError("no game grid");
-        }
         for (int i = 0; i < _allPlayers.Count; i++)
         {
             _allPlayers[i].StartMoving(gameGrid);
         }
-        if(_timeManager == null)
+        if (_timeManager == null)
         {
             _timeManager = gameObject.AddComponent<TimeManager>();
         }
+        _timeManager.Restart();
         TimeManager.OnTimesUp.AddListener(MoveSnakes);
-
-        gameGrid.CreateAnApple();
     }
 
-    void MoveSnakes()
+    public void MoveSnakes()
     {
         for (int i = 0; i < _allPlayers.Count; i++)
         {
-            _allPlayers[i].MoveNext();
+            //if one snake cannot move, we stop
+            if(!_allPlayers[i].MoveNext())
+            {
+                StopMoving();
+            }
+        }
+    }
+
+    void StopMoving()
+    {
+        if (_timeManager != null)
+        {
+            _timeManager.Pause(true);
+            TimeManager.OnTimesUp.RemoveAllListeners();
         }
     }
 
     void OnDestroy()
     {
-        if (_timeManager != null)
-        {
-            TimeManager.OnTimesUp.RemoveAllListeners();
-        }
+        StopMoving();
     }
 }
