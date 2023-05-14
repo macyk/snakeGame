@@ -3,6 +3,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// manages all the cells
+/// </summary>
 public class GameGrid : MonoBehaviour
 {
     public GridLayoutGroup  grid;
@@ -12,8 +15,8 @@ public class GameGrid : MonoBehaviour
     /// </summary>
     public int row;
     public int column;
-    List<GridCell> _grids = new List<GridCell>();
-    Dictionary<Vector2, GridCell> _emptyGrids = new Dictionary<Vector2, GridCell>();
+    List<GridCell>                  _grids = new List<GridCell>();
+    Dictionary<Vector2, GridCell>   _emptyGrids = new Dictionary<Vector2, GridCell>();
 
     /// <summary>
     /// generate the grids
@@ -114,6 +117,19 @@ public class GameGrid : MonoBehaviour
         if (!_emptyGrids.ContainsKey(pos))
         {
             _emptyGrids.Add(pos, cell);
+        }
+        cell.UnFill();
+    }
+
+    /// <summary>
+    /// release all occupied cells
+    /// </summary>
+    /// <param name="cells"></param>
+    public void SnakeDead(List<GridCell> cells)
+    {
+        for(int i = 0; i< cells.Count; i++)
+        {
+            ReleaseACell(cells[i]);
         }
     }
 }

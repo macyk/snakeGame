@@ -30,6 +30,18 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// remove the snake from the list
+    /// </summary>
+    /// <param name="snake"></param>
+    void OnSnakeDead(Snake snake)
+    {
+        if(_allPlayers.Contains(snake))
+        {
+            _allPlayers.Remove(snake);
+        }
+    }
+
     public void StartPlayers(GameGrid gameGrid)
     {
         for (int i = 0; i < _allPlayers.Count; i++)
@@ -52,6 +64,8 @@ public class PlayerManager : MonoBehaviour
             if(!_allPlayers[i].MoveNext())
             {
                 StopMoving();
+                OnSnakeDead(_allPlayers[i]);
+                break;
             }
         }
     }

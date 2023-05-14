@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Snake : MonoBehaviour
 {
@@ -111,7 +112,6 @@ public class Snake : MonoBehaviour
         GridCell cell= gameGrid.PlaceASnake(_id, _color);
         _headPos = cell.GetPos();
         _currentDirection = cell.GetRandomDirection();
-        Debug.Log("StartMoving: " + _currentDirection);
         _cells.Add(cell);
     }
 
@@ -136,6 +136,10 @@ public class Snake : MonoBehaviour
             {
                 GameManager.Instance.GameOver(this);
             }
+            if(_gameGrid != null)
+            {
+                _gameGrid.SnakeDead(_cells);
+            }
             return false;
         }
         else
@@ -147,7 +151,6 @@ public class Snake : MonoBehaviour
                 if(extraLength<1)
                 {
                     GridCell tail = _cells.First();
-                    tail.UnFill();
 
                     _gameGrid.ReleaseACell(tail);
                     _cells.Remove(tail);
