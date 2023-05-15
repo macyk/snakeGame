@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
+/// <summary>
+/// keeps track of the player info
+/// </summary>
 public class Snake : MonoBehaviour
 {
-    KeyCode _upKey;
-    KeyCode _leftKey;
-    KeyCode _rightKey;
-    KeyCode _downKey;
     Color   _color;
     int     _id;
     List<Vector2>   _directions = new List<Vector2>();
@@ -20,24 +19,38 @@ public class Snake : MonoBehaviour
     List<GridCell>  _cells      = new List<GridCell>();
     GameGrid        _gameGrid;
     bool            _alive;
+    PlayerInput     _playerInput;
+    const   string  UP          = "Up";
+    const   string  DOWN        = "Down";
+    const   string  LEFT        = "Left";
+    const   string  RIGHT       = "Right";
 
     /// <summary>
     /// set up the snake with it's control, id and color
     /// </summary>
-    /// <param name="upKey"></param>
-    /// <param name="leftKey"></param>
-    /// <param name="rightKey"></param>
-    /// <param name="downKey"></param>
+    /// <param name="inputActionAsset"></param>
     /// <param name="color"></param>
     /// <param name="id"></param>
-    public void Setup(KeyCode upKey, KeyCode leftKey, KeyCode rightKey,
-        KeyCode downKey, Color color, int id)
+    public void Setup(InputActionAsset inputActionAsset, Color color, int id)
     {
+        if(_playerInput == null)
+        {
+            _playerInput = gameObject.AddComponent<PlayerInput>();
+            _playerInput.notificationBehavior = PlayerNotifications.InvokeUnityEvents;
+        }
+        if(_playerInput != null)
+        {
+            _playerInput.actions = inputActionAsset;
+            InputActionMap inputActionMap = _playerInput.actions.FindActionMap("Player");
+            if(inputActionMap != null)
+            {
+                EnableAction(inputActionMap, UP);
+                EnableAction(inputActionMap, DOWN);
+                EnableAction(inputActionMap, LEFT);
+                EnableAction(inputActionMap, RIGHT);
+            }
+        }
         _alive = true;
-        _upKey = upKey;
-        _leftKey = leftKey;
-        _rightKey = rightKey;
-        _downKey = downKey;
         _color = color;
         _id = id;
         //down
@@ -50,9 +63,63 @@ public class Snake : MonoBehaviour
         _directions.Add(GameInfo.LEFT);
     }
 
+    /// <summary>
+    /// enable action by name
+    /// </summary>
+    /// <param name="inputActionMap"></param>
+    /// <param name="actionName"></param>
+    void EnableAction(InputActionMap inputActionMap, string actionName)
+    {
+        InputAction upAction = inputActionMap.FindAction(actionName);
+        if (upAction != null)
+        {
+            upAction.Enable();
+            upAction.performed += OnActionTriggered;
+        }
+    }
+
     public int GetID()
     {
         return _id;
+    }
+
+    void OnActionTriggered(InputAction.CallbackContext context)
+    {
+        switch(context.action.name)
+        {
+            case UP:
+                if (_cells.Count > 1
+                    && Equals(_currentDirection, GameInfo.DOWN))
+                {
+                    break;
+                }
+                _currentDirection = GameInfo.UP;
+                break;
+            case DOWN:
+                if (_cells.Count > 1
+                    && Equals(_currentDirection, GameInfo.UP))
+                {
+                    break;
+                }
+                _currentDirection = GameInfo.DOWN;
+                break;
+            case LEFT:
+                if (_cells.Count > 1
+                    && Equals(_currentDirection, GameInfo.RIGHT))
+                {
+                    break;
+                }
+                _currentDirection = GameInfo.LEFT;
+                break;
+            case RIGHT:
+                if (_cells.Count > 1
+                    && Equals(_currentDirection, GameInfo.LEFT))
+                {
+                    break;
+                }
+                _currentDirection = GameInfo.RIGHT;
+                break;
+        }
     }
 
     void Update()
@@ -60,49 +127,6 @@ public class Snake : MonoBehaviour
         if(!_alive)
         {
             return;
-        }
-        if(_cells.Count>1)
-        {
-            ///we cannot go backwards
-            if (Input.GetKeyDown(_downKey)
-                && !Equals(_currentDirection, GameInfo.UP))
-            {
-                _currentDirection = GameInfo.DOWN;
-            }
-            if (Input.GetKeyDown(_leftKey)
-                && !Equals(_currentDirection, GameInfo.RIGHT))
-            {
-                _currentDirection = GameInfo.LEFT;
-            }
-            if (Input.GetKeyDown(_upKey)
-                && !Equals(_currentDirection, GameInfo.DOWN))
-            {
-                _currentDirection = GameInfo.UP;
-            }
-            if (Input.GetKeyDown(_rightKey)
-                && !Equals(_currentDirection, GameInfo.LEFT))
-            {
-                _currentDirection = GameInfo.RIGHT;
-            }
-        }
-        else if(_cells.Count == 1)
-        {
-            if (Input.GetKeyDown(_downKey))
-            {
-                _currentDirection = GameInfo.DOWN;
-            }
-            if (Input.GetKeyDown(_leftKey))
-            {
-                _currentDirection = GameInfo.LEFT;
-            }
-            if (Input.GetKeyDown(_upKey))
-            {
-                _currentDirection = GameInfo.UP;
-            }
-            if (Input.GetKeyDown(_rightKey))
-            {
-                _currentDirection = GameInfo.RIGHT;
-            }
         }
     }
 
@@ -166,5 +190,13 @@ public class Snake : MonoBehaviour
         }
 
         return true;
+    }
+
+    void OnDestroy()
+    {
+        if (_playerInput != null)
+        {
+            _playerInput.onActionTriggered -= OnActionTriggered;
+        }
     }
 }

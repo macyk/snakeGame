@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -13,19 +14,17 @@ public class PlayerManager : MonoBehaviour
     {
         for(int i = 0; i< playerInfos.Length; i++)
         {
-            CreateASnake(playerInfos[i].upKey, playerInfos[i].leftKey, playerInfos[i].rightKey,
-                playerInfos[i].downKey,
+            CreateASnake(playerInfos[i].inputActionAsset,
                 playerInfos[i].playerColor, i);
         }
     }
 
-    void CreateASnake(KeyCode upKey, KeyCode leftKey, KeyCode rightKey,
-        KeyCode downKey, Color color, int id)
+    void CreateASnake(InputActionAsset inputActionAsset, Color color, int id)
     {
         if(snakePrefab != null)
         {
             Snake s = Instantiate(snakePrefab);
-            s.Setup(upKey, leftKey, rightKey, downKey, color, id);
+            s.Setup(inputActionAsset, color, id);
             _allPlayers.Add(s);
         }
     }
