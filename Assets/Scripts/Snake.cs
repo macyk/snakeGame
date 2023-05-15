@@ -156,10 +156,6 @@ public class Snake : MonoBehaviour
         GridCell cell = _gameGrid.GetACell(_headPos + _currentDirection);
         if(cell == null)
         {
-            if(GameManager.Instance)
-            {
-                GameManager.Instance.GameOver(this);
-            }
             if(_gameGrid != null)
             {
                 _gameGrid.SnakeDead(_cells);

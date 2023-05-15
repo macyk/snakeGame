@@ -39,6 +39,11 @@ public class PlayerManager : MonoBehaviour
         {
             _allPlayers.Remove(snake);
         }
+        if(_allPlayers.Count == 0 && GameManager.Instance)
+        {
+            GameManager.Instance.GameOver();
+            StopMoving();
+        }
     }
 
     public void StartPlayers(GameGrid gameGrid)
@@ -62,9 +67,7 @@ public class PlayerManager : MonoBehaviour
             //if one snake cannot move, we stop
             if(!_allPlayers[i].MoveNext())
             {
-                StopMoving();
                 OnSnakeDead(_allPlayers[i]);
-                break;
             }
         }
     }

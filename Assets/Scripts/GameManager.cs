@@ -53,10 +53,9 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// game ends
     /// </summary>
-    /// <param name="deadSnake">the snake who died</param>
-    public void GameOver(Snake deadSnake)
+    public void GameOver()
     {
         _started = false;
-        Debug.Log("game over : "+ deadSnake.GetID());
+        Debug.Log("game over");
     }
 }
